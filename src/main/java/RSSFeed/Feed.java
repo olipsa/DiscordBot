@@ -1,14 +1,10 @@
+package RSSFeed;
+
 import com.sun.syndication.feed.synd.*;
 import com.sun.syndication.io.FeedException;
-import com.sun.syndication.io.SyndFeedInput;
 import com.sun.syndication.io.SyndFeedOutput;
-import com.sun.syndication.io.XmlReader;
 
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Writer;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -17,17 +13,17 @@ public class Feed {
     public static void main(String[] args) {
         SyndFeed feed = new SyndFeedImpl();
         feed.setFeedType("rss_1.0");
-        feed.setTitle("Test title");
-        feed.setLink("http://www.somelinkOndina.com");
-        feed.setDescription("Basic description");
+        feed.setTitle("BOT title");
+        feed.setLink("http://localhost:8088/test/xyz.txt");
+        feed.setDescription("Whatever description");
         SyndEntry entry = new SyndEntryImpl();
         entry.setTitle("Entry title");
-        entry.setLink("http://www.somelinkOndina.com/entry1");
+        entry.setLink("http://localhost:8088/test/xyz.txt/entry1");
 
         feed.setEntries(Collections.singletonList(entry));
         SyndContent description = new SyndContentImpl();
         description.setType("text/html");
-        description.setValue("First entry");
+        description.setValue("BOT");
 
         entry.setDescription(description);
         List<SyndCategory> categories = new ArrayList<>();
@@ -36,9 +32,17 @@ public class Feed {
         categories.add(category);
 
         entry.setCategories(categories);
-        Writer writer = null;
+        File rss=new File("C:\\xampp\\htdocs\\test","xyz.txt");
+        if (!rss.exists()) {
+            try {
+                rss.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        BufferedWriter writer = null;
         try {
-            writer = new FileWriter("xyz.txt");
+            writer = new BufferedWriter(new FileWriter(rss.getAbsoluteFile()));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -54,18 +58,6 @@ public class Feed {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        URL feedSource = null;
-        try {
-            feedSource = new URL("https://blogs.oracle.com/java/rss");
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-        SyndFeedInput input = new SyndFeedInput();
-        try {
-            assert feedSource != null;
-            SyndFeed feed1 = input.build(new XmlReader(feedSource));
-        } catch (FeedException | IOException e) {
-            e.printStackTrace();
-        }
+
     }
 }

@@ -1,6 +1,6 @@
+RSSFeed/Feed.java
+ RSSFeed.Feed
 MyListener.java
  MyListener
 Main.java
  Main
-Feed.java
- Feed

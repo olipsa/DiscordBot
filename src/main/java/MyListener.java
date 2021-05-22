@@ -1,7 +1,15 @@
+import com.sun.syndication.feed.synd.SyndFeed;
+import com.sun.syndication.io.FeedException;
+import com.sun.syndication.io.SyndFeedInput;
+import com.sun.syndication.io.XmlReader;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 public class MyListener extends ListenerAdapter
 {
@@ -12,12 +20,35 @@ public class MyListener extends ListenerAdapter
         // We don't want to respond to other bot accounts, including ourself
         Message message = event.getMessage();
         String content = message.getContentRaw();
-        // getContentRaw() is an atomic getter
-        // getContentDisplay() is a lazy getter which modifies the content for e.g. console view (strip discord formatting)
-        if (content.equals("->help"))
+        MessageChannel channel = event.getChannel();
+        if(content.startsWith("->"))
         {
-            MessageChannel channel = event.getChannel();
-            channel.sendMessage("Hello "+event.getAuthor().getName()+"! Welcome to our programming community!").queue(); // Important to call .queue() on the RestAction returned by sendMessage(...)
+            URL feedSource = null;
+            try {
+                feedSource = new URL("http://localhost:8088/test/xyz.txt");
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+            SyndFeedInput input = new SyndFeedInput();
+            SyndFeed feed1=null;
+            try {
+                assert feedSource != null;
+                feed1 = input.build(new XmlReader(feedSource));
+                System.out.println(feed1);
+            } catch (FeedException | IOException e) {
+                e.printStackTrace();
+            }
+            switch(content.substring(2)){
+                case "help":
+                    System.out.println(content.substring(2));
+                    assert feed1!= null;
+                    System.out.println("feed is: "+feed1);
+                    channel.sendMessage(feed1.getDescription()).queue();
+                    break;
+                default:
+                    channel.sendMessage("Command not implemented").queue();
+
+            }
         }
 
     }
