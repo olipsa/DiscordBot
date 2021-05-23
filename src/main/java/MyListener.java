@@ -1,5 +1,6 @@
 import DatabaseManagement.DatabaseConnection;
 import DatabaseManagement.ServerTable;
+import DatabaseManagement.UserServerTable;
 import DatabaseManagement.UserTable;
 import com.sun.syndication.feed.synd.SyndFeed;
 import com.sun.syndication.io.FeedException;
@@ -7,7 +8,10 @@ import com.sun.syndication.io.SyndFeedInput;
 import com.sun.syndication.io.XmlReader;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.emote.EmoteAddedEvent;
+import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.api.events.guild.GuildReadyEvent;
+import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
+import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
@@ -20,22 +24,43 @@ import java.util.List;
 public class MyListener extends ListenerAdapter
 {
     @Override
-    public void onGuildReady(GuildReadyEvent event)
-    {
-
+    public void onGuildJoin(GuildJoinEvent event){
         Guild guild=event.getGuild();
+        System.out.println("Bot joined server "+guild.getName());
+        //Add joined server to database
         ServerTable.insert(guild.getId(),guild.getName());
-        System.out.println("Connected to server "+guild);
+
+        //Add members from joined server to database
         List<Member> membersGuild=guild.getMembers();
-        List<User>usersList=new ArrayList<>();
+        List<String>usersList=new ArrayList<>();
         for (Member member:membersGuild) {
             if(!member.getUser().isBot()){
-                usersList.add(member.getUser());
+                User currentUser=member.getUser();
+                usersList.add(currentUser.getName());
+                UserTable.insert(currentUser.getId(),currentUser.getName());
+                UserServerTable.insert(currentUser.getId(),guild.getId());
+
             }
         }
-
-        System.out.println("Members in this server:\n"+usersList);
+        System.out.println("Members in "+guild.getName()+" server:\n"+usersList);
         System.out.println();
+    }
+    @Override
+    public void onGuildReady(GuildReadyEvent event)
+    {
+        Guild guild=event.getGuild();
+        System.out.println("Members in "+guild.getName()+" server:\n"+UserServerTable.getUsersFromGuild(guild.getId()));
+    }
+    @Override
+    public void onGuildMemberJoin(GuildMemberJoinEvent event){
+        if(event.getUser().isBot()) return;
+        UserTable.insert(event.getUser().getId(),event.getUser().getName());
+        UserServerTable.insert(event.getUser().getId(),event.getGuild().getId());
+        MessageChannel channel = event.getGuild().getDefaultChannel();
+        assert channel != null;
+        System.out.println("User "+event.getUser().getName()+" joined "+event.getGuild().getName()+" server.");
+        channel.sendMessage("Welcome to our Reading group, "+event.getUser().getName()+" :books: :heartpulse:").queue();
+        System.out.println("Members in "+event.getGuild().getName()+" server:\n"+UserServerTable.getUsersFromGuild(event.getGuild().getId()));
     }
     @Override
     public void onMessageReceived(MessageReceivedEvent event)
@@ -84,6 +109,18 @@ public class MyListener extends ListenerAdapter
     }
     @Override
     public void onEmoteAdded(EmoteAddedEvent event){
+
+    }
+    @Override
+    public void onGuildMemberRemove(GuildMemberRemoveEvent event){
+        if(event.getUser().isBot()) return;
+        UserServerTable.deleteUser(event.getUser().getId(),event.getGuild().getId());
+        UserTable.deleteUser(event.getUser().getId());
+        System.out.println("User "+event.getUser().getName()+" left "+event.getGuild().getName()+" server.");
+        MessageChannel channel = event.getGuild().getDefaultChannel();
+        assert channel != null;
+        channel.sendMessage(event.getUser().getName()+" left our Reading group :cry:").queue();
+        System.out.println("Members in "+event.getGuild().getName()+" server:\n"+UserServerTable.getUsersFromGuild(event.getGuild().getId()));
 
     }
 }

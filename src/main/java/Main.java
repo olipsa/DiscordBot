@@ -1,5 +1,7 @@
 import DatabaseManagement.DatabaseConnection;
 import DatabaseManagement.ServerTable;
+import DatabaseManagement.UserServerTable;
+import DatabaseManagement.UserTable;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.requests.GatewayIntent;
@@ -8,7 +10,7 @@ import net.dv8tion.jda.api.utils.MemberCachePolicy;
 
 import javax.security.auth.login.LoginException;
 import java.sql.SQLException;
-import java.util.EnumSet;
+
 
 public class Main {
 
@@ -25,9 +27,15 @@ public class Main {
             try {
                 DatabaseConnection.getInstance();
 
-            } catch (SQLException | ClassNotFoundException throwables) {
-                throwables.printStackTrace();
+            } catch (SQLException | ClassNotFoundException throwable) {
+                throwable.printStackTrace();
             }
+            new ServerTable();
+            new UserTable();
+            new UserServerTable();
+            System.out.println(ServerTable.getServerList());
+            System.out.println(UserTable.getUserList());
+            System.out.println(UserServerTable.getUserServerList());
             api.addEventListener(new MyListener());
 
         } catch (LoginException e) {
