@@ -1,6 +1,16 @@
 RSSFeed/Feed.java
  RSSFeed.Feed
-MyListener.java
- MyListener
+DatabaseManagement/DatabaseConnection.java
+ DatabaseManagement.DatabaseConnection
+DatabaseManagement/User.java
+ DatabaseManagement.User
+DatabaseManagement/UserTable.java
+ DatabaseManagement.UserTable
+DatabaseManagement/Server.java
+ DatabaseManagement.Server
 Main.java
  Main
+MyListener.java
+ MyListener
+DatabaseManagement/ServerTable.java
+ DatabaseManagement.ServerTable

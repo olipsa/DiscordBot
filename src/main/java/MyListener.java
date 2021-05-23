@@ -1,18 +1,42 @@
+import DatabaseManagement.DatabaseConnection;
+import DatabaseManagement.ServerTable;
+import DatabaseManagement.UserTable;
 import com.sun.syndication.feed.synd.SyndFeed;
 import com.sun.syndication.io.FeedException;
 import com.sun.syndication.io.SyndFeedInput;
 import com.sun.syndication.io.XmlReader;
-import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.MessageChannel;
+import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.events.emote.EmoteAddedEvent;
+import net.dv8tion.jda.api.events.guild.GuildReadyEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MyListener extends ListenerAdapter
 {
+    @Override
+    public void onGuildReady(GuildReadyEvent event)
+    {
+
+        Guild guild=event.getGuild();
+        ServerTable.insert(guild.getId(),guild.getName());
+        System.out.println("Connected to server "+guild);
+        List<Member> membersGuild=guild.getMembers();
+        List<User>usersList=new ArrayList<>();
+        for (Member member:membersGuild) {
+            if(!member.getUser().isBot()){
+                usersList.add(member.getUser());
+            }
+        }
+
+        System.out.println("Members in this server:\n"+usersList);
+        System.out.println();
+    }
     @Override
     public void onMessageReceived(MessageReceivedEvent event)
     {
@@ -34,22 +58,32 @@ public class MyListener extends ListenerAdapter
             try {
                 assert feedSource != null;
                 feed1 = input.build(new XmlReader(feedSource));
-                System.out.println(feed1);
             } catch (FeedException | IOException e) {
                 e.printStackTrace();
             }
+            assert feed1!= null;
             switch(content.substring(2)){
                 case "help":
-                    System.out.println(content.substring(2));
-                    assert feed1!= null;
-                    System.out.println("feed is: "+feed1);
                     channel.sendMessage(feed1.getDescription()).queue();
                     break;
+                case "stop":
+                    channel.sendMessage("Warning, you are about to stop the Discord Bot. This action cannot be undone. Are you sure you want to continue? React with :thumbsup: or :thumbsdown:").queue();
+                    try {
+                        Thread.sleep(2000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    DatabaseConnection.closeConn();
+                    System.exit(0);
                 default:
                     channel.sendMessage("Command not implemented").queue();
 
             }
         }
+
+    }
+    @Override
+    public void onEmoteAdded(EmoteAddedEvent event){
 
     }
 }
