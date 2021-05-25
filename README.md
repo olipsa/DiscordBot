@@ -4,7 +4,7 @@ For the Advanced Programming class I designed a discord bot called Bookmate, tha
 
 In order to keep track of all users that are in the same guils as the Bot, I created the USERS and SERVERS tables, and also USER_SERVERS table for easily retrieving each person from a specific server.  An example of the USER_SERVERS is:
 
-![image](https://user-images.githubusercontent.com/58936202/119496192-ea995600-bd6b-11eb-9222-cae1f589a03e.png).
+![image](https://user-images.githubusercontent.com/58936202/119496192-ea995600-bd6b-11eb-9222-cae1f589a03e.png)
 Those attributes are referencing IDs from previous tables.
 
 I needed also to store each user's bookList, that's independent of the server (for instance, if a user is part of multiple Guilds that have our Discord Bot, he/she will have same books on all servers, and if an addition or removal will be made, it will persist in each guild. And in order to design this feature, I created two additional tables, BOOKS and BOOK_USERS (similarily to the USER_SERVERS presented earlier).
