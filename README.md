@@ -20,7 +20,7 @@ Some of his features include:
 ![image](https://user-images.githubusercontent.com/58936202/119499400-5b8e3d00-bd6f-11eb-9d11-6883650058b6.png)
 
 - inform members whenever a user is removed from the corresponding Guild
-- 
+
 ![image](https://user-images.githubusercontent.com/58936202/119499524-7a8ccf00-bd6f-11eb-8126-1d0fe7df3d00.png)
 
 - searches for books retreived from the RSS feed
