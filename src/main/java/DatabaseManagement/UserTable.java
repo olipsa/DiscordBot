@@ -59,7 +59,7 @@ public class UserTable {
         }
 
     }
-    public static void deleteUser(String id_user){
+    public static void delete(String id_user){
         Connection con=DatabaseConnection.getConn();
         if(UserServerTable.getUserServerList().containsKey(id_user)) return;
         String sql="DELETE FROM USERS WHERE ID="+id_user;

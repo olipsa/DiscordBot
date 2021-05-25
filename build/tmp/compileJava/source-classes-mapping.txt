@@ -1,18 +1,28 @@
-DatabaseManagement/Server.java
- DatabaseManagement.Server
+DatabaseManagement/UserServerTable.java
+ DatabaseManagement.UserServerTable
+RSSFeed/Feed.java
+ RSSFeed.Feed
+DatabaseManagement/ServerTable.java
+ DatabaseManagement.ServerTable
+MyEmoteListener.java
+ MyEmoteListener
+DatabaseManagement/BookTable.java
+ DatabaseManagement.BookTable
+DatabaseManagement/UserTable.java
+ DatabaseManagement.UserTable
 DatabaseManagement/DatabaseConnection.java
  DatabaseManagement.DatabaseConnection
 DatabaseManagement/User.java
  DatabaseManagement.User
-DatabaseManagement/ServerTable.java
- DatabaseManagement.ServerTable
-RSSFeed/Feed.java
- RSSFeed.Feed
-DatabaseManagement/UserServerTable.java
- DatabaseManagement.UserServerTable
-DatabaseManagement/UserTable.java
- DatabaseManagement.UserTable
-MyListener.java
- MyListener
+DatabaseManagement/Server.java
+ DatabaseManagement.Server
+DatabaseManagement/Book.java
+ DatabaseManagement.Book
+DatabaseManagement/UserBookTable.java
+ DatabaseManagement.UserBookTable
 Main.java
  Main
+MyListener.java
+ MyListener
+MyMessageListener.java
+ MyMessageListener

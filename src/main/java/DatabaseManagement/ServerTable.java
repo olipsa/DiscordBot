@@ -45,6 +45,22 @@ public class ServerTable {
         }
 
     }
+    public static void delete(String id_server){
+        Connection con=DatabaseConnection.getConn();
+        String sql="DELETE FROM SERVERS WHERE ID="+id_server;
+        try {
+            PreparedStatement pstmt = con.prepareStatement(sql);
+            pstmt.executeUpdate();
+            for(Server serverRemoved:serverList)
+                if(serverRemoved.getId().equals(id_server))
+                {
+                    serverList.remove(serverRemoved);
+                    break;
+                }
+        } catch (SQLException throwable) {
+            throwable.printStackTrace();
+        }
+    }
 
     public static List<Server> getServerList() {
         return serverList;

@@ -1,7 +1,4 @@
-import DatabaseManagement.DatabaseConnection;
-import DatabaseManagement.ServerTable;
-import DatabaseManagement.UserServerTable;
-import DatabaseManagement.UserTable;
+import DatabaseManagement.*;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.requests.GatewayIntent;
@@ -20,7 +17,7 @@ public class Main {
             String BOT_TOKEN = "ODQ1MjU5NjY5OTczNzYyMDU4.YKeXaQ.LtaohN1a3CIJYKe4BWEortbC4sA";
             JDA api= JDABuilder.createDefault(BOT_TOKEN)
                                 .setChunkingFilter(ChunkingFilter.ALL)
-                                .enableIntents(GatewayIntent.GUILD_MEMBERS)
+                                .enableIntents(GatewayIntent.GUILD_MEMBERS,GatewayIntent.GUILD_MESSAGE_REACTIONS,GatewayIntent.DIRECT_MESSAGE_REACTIONS)
                                 .setMemberCachePolicy(MemberCachePolicy.ALL)
                                 .build();
 
@@ -30,12 +27,7 @@ public class Main {
             } catch (SQLException | ClassNotFoundException throwable) {
                 throwable.printStackTrace();
             }
-            new ServerTable();
-            new UserTable();
-            new UserServerTable();
-            System.out.println(ServerTable.getServerList());
-            System.out.println(UserTable.getUserList());
-            System.out.println(UserServerTable.getUserServerList());
+            Main.retrieveData();
             api.addEventListener(new MyListener());
 
         } catch (LoginException e) {
@@ -43,5 +35,17 @@ public class Main {
         }
 
 
+    }
+    static private void retrieveData(){
+        new ServerTable();
+        new UserTable();
+        new UserServerTable();
+        new BookTable();
+        new UserBookTable();
+        System.out.println(ServerTable.getServerList());
+        System.out.println(UserTable.getUserList());
+        System.out.println(UserServerTable.getUserServerList());
+        System.out.println(BookTable.getBookList());
+        System.out.println(UserBookTable.getUserBookList());
     }
 }

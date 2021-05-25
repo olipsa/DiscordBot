@@ -91,6 +91,26 @@ public class UserServerTable {
             throwable.printStackTrace();
         }
     }
+    public static void deleteServer(String id_server){
+        Connection con=DatabaseConnection.getConn();
+        String sql="DELETE FROM USER_SERVERS WHERE ID_SERVER="+id_server;
+        try {
+            PreparedStatement pstmt = con.prepareStatement(sql);
+            pstmt.executeUpdate();
+            for(Map.Entry<String,List<String>> entry : userServerList.entrySet()){
+                for(String server:entry.getValue())
+                    if(server.equals(id_server)){
+                        entry.getValue().remove(server);
+                        break;
+                    }
+                if(entry.getValue().isEmpty())
+                    userServerList.remove(entry.getKey());
+
+            }
+        } catch (SQLException throwable) {
+            throwable.printStackTrace();
+        }
+    }
     public static Map<String, List<String>> getUserServerList() {
         return userServerList;
     }
